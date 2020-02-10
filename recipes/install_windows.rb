@@ -32,9 +32,8 @@ directory node['metricbeat']['windows']['base_dir'] do
   action :create
 end
 
-windows_zipfile node['metricbeat']['windows']['base_dir'] do
-  source package_file
-  action :unzip
+powershell_script 'extract metricbeat' do
+  code "Expand-Archive -LiteralPath #{package_file} -DestinationPath #{node['metricbeat']['windows']['base_dir']}"
   not_if { ::File.exist?(node['metricbeat']['windows']['base_dir'] + "/metricbeat-#{node['metricbeat']['version']}-windows" + '/install-service-metricbeat.ps1') }
 end
 
